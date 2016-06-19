@@ -17,5 +17,8 @@
         <file>image/exit.png</file>
         <file>image/win.png</file>
         <file>image/fail.png</file>
+        <file>image/end.jpg</file>
+        <file>image/end2.jpg</file>
+        <file>image/end3.jpg</file>
     </qresource>
 </RCC>

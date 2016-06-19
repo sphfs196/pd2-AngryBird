@@ -28,6 +28,8 @@ public:
     QGraphicsView *graphicsView;
     QLabel *label;
     QLabel *label_2;
+    QLabel *label_4;
+    QLabel *label_5;
 
     void setupUi(QMainWindow *MainWindow)
     {
@@ -63,6 +65,18 @@ public:
         label_2->setObjectName(QStringLiteral("label_2"));
         label_2->setGeometry(QRect(100, 0, 100, 100));
         label_2->setFont(font1);
+        label_4 = new QLabel(centralWidget);
+        label_4->setObjectName(QStringLiteral("label_4"));
+        label_4->setGeometry(QRect(380, 100, 200, 200));
+        QFont font2;
+        font2.setPointSize(26);
+        font2.setBold(true);
+        font2.setWeight(75);
+        label_4->setFont(font2);
+        label_5 = new QLabel(centralWidget);
+        label_5->setObjectName(QStringLiteral("label_5"));
+        label_5->setGeometry(QRect(500, 100, 200, 200));
+        label_5->setFont(font2);
         MainWindow->setCentralWidget(centralWidget);
 
         retranslateUi(MainWindow);
@@ -75,6 +89,8 @@ public:
         MainWindow->setWindowTitle(QApplication::translate("MainWindow", "MainWindow", 0));
         label->setText(QApplication::translate("MainWindow", "score : ", 0));
         label_2->setText(QApplication::translate("MainWindow", "TextLabel", 0));
+        label_4->setText(QApplication::translate("MainWindow", "score : ", 0));
+        label_5->setText(QApplication::translate("MainWindow", "TextLabel", 0));
     } // retranslateUi
 
 };

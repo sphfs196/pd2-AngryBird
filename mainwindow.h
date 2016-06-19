@@ -52,7 +52,15 @@ public:
     int judgeobs[3]={0},judgepig[3]={0};
     int countresult=0;
 
+    int ifend=0;
+
     QGraphicsPixmapItem *result;
+    QGraphicsPixmapItem *end;
+    QGraphicsPixmapItem *exit1;
+    QGraphicsPixmapItem *restart1;
+    QGraphicsPixmapItem *shot;
+    QGraphicsPixmapItem *exit;
+    QGraphicsPixmapItem *restart;
 
     void showEvent(QShowEvent *);
     bool eventFilter(QObject *,QEvent *event);
@@ -70,6 +78,7 @@ private slots:
     void judgeobsv();
     void judgeresult();
 
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
@@ -78,6 +87,7 @@ private:
     QTimer timer;
     QTimer birdtimer;
     QTimer pigtimer;
+    QTimer endtimer;
 
 };
 

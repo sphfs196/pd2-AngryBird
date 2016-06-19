@@ -17,6 +17,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::showEvent(QShowEvent *)
 {
+    //hide the end view
+
+    ui->label_4->hide();
+    ui->label_5->hide();
+
     // Setting the QGraphicsScene
     scene = new QGraphicsScene(0,0,width(),ui->graphicsView->height());
     ui->graphicsView->setScene(scene);
@@ -33,7 +38,7 @@ void MainWindow::showEvent(QShowEvent *)
     itemList.push_back(new Land(-3,5,3,32,QPixmap(":/ground.png").scaled(height()/6.0,width()),world,scene));
     itemList.push_back(new Land(33,5,3,32,QPixmap(":/ground.png").scaled(height()/6.0,width()),world,scene));
 
-    QGraphicsPixmapItem *shot = new QGraphicsPixmapItem;
+    shot = new QGraphicsPixmapItem;
     QPixmap shot_img;
     shot_img.load(":/image/Slingshot_2.png");
     shot_img = shot_img.scaled(150,150,Qt::KeepAspectRatio);
@@ -41,7 +46,7 @@ void MainWindow::showEvent(QShowEvent *)
     shot->setPos(150,320);
     scene->addItem(shot);
 
-    QGraphicsPixmapItem *restart = new QGraphicsPixmapItem;
+    restart = new QGraphicsPixmapItem;
     QPixmap restart_img;
     restart_img.load(":/image/restart.png");
     restart_img = restart_img.scaled(80,80,Qt::KeepAspectRatio);
@@ -49,7 +54,7 @@ void MainWindow::showEvent(QShowEvent *)
     restart->setPos(785,10);
     scene->addItem(restart);
 
-    QGraphicsPixmapItem *exit = new QGraphicsPixmapItem;
+    exit = new QGraphicsPixmapItem;
     QPixmap exit_img;
     exit_img.load(":/image/exit.png");
     exit_img = exit_img.scaled(150,150,Qt::KeepAspectRatio);
@@ -117,7 +122,8 @@ void MainWindow::showEvent(QShowEvent *)
     }
 
     connect(&pigtimer,SIGNAL(timeout()),this,SLOT(judgepigpos()));
-    connect(&pigtimer,SIGNAL(timeout()),this,SLOT(judgeobsv()));    connect(&pigtimer,SIGNAL(timeout()),this,SLOT(judgeresult()));
+    connect(&pigtimer,SIGNAL(timeout()),this,SLOT(judgeobsv()));
+    //connect(&pigtimer,SIGNAL(timeout()),this,SLOT(judgeresult()));
 
     pigtimer.start(10);
 }
@@ -133,6 +139,55 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
         {
             if(float(18.0-(mousepos.y())*18/540) >= 15.0 && float(18.0-(mousepos.y())*18/540) <= 18.0)
             {
+                if(ifend==1)
+                {
+                    scene->removeItem(end);
+                    delete this->end;
+                    ifend=0;
+                    //ifend=false;
+                    delete this->restart1;
+                    delete this->exit1;
+
+                }
+
+
+                delete this->shot;
+                delete this->restart;
+                delete this->exit;
+
+                itemList.push_back(new Land(0,19,0,0,QPixmap(":/image/001.jpg").scaled(960,540),world,scene));
+                shot = new QGraphicsPixmapItem;
+                QPixmap shot_img;
+                shot_img.load(":/image/Slingshot_2.png");
+                shot_img = shot_img.scaled(150,150,Qt::KeepAspectRatio);
+                shot->setPixmap(shot_img);
+                shot->setPos(150,320);
+                scene->addItem(shot);
+
+                restart = new QGraphicsPixmapItem;
+                QPixmap restart_img;
+                restart_img.load(":/image/restart.png");
+                restart_img = restart_img.scaled(80,80,Qt::KeepAspectRatio);
+                restart->setPixmap(restart_img);
+                restart->setPos(785,10);
+                scene->addItem(restart);
+
+                exit = new QGraphicsPixmapItem;
+                QPixmap exit_img;
+                exit_img.load(":/image/exit.png");
+                exit_img = exit_img.scaled(150,150,Qt::KeepAspectRatio);
+                exit->setPixmap(exit_img);
+                exit->setPos(750,110);
+                scene->addItem(exit);
+
+                disconnect(&endtimer,SIGNAL(timeout()),this,SLOT(judgeresult()));
+
+                ui->label_4->hide();
+                ui->label_5->hide();
+
+                ui->label->show();
+                ui->label_2->show();
+
                 firstScore = 0;
                 QString scoreNum;
                 scoreNum =QString::number(firstScore);
@@ -142,8 +197,8 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
                 birdnum=0;
                 shotmode=0;
                 countv=0;
-                countresult=0;
-                scene->removeItem(result);
+                //countresult=0;
+                //scene->removeItem(result);
 
                 for(i=0;i<3;i++)
                 {
@@ -221,7 +276,6 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             std::cout << "Move !" << std::endl ;
             //std::cout << (18.0-(QCursor::pos().y()-(540/2))*18/540) << std::endl ;
             std::cout << float((mousepos.x())*32/960) << std::endl ;
-
         }
         //std::cout << float(18.0-(mousepos.y())*18/540) << std::endl ;
             return true;
@@ -242,6 +296,11 @@ bool MainWindow::eventFilter(QObject *, QEvent *event)
             //判斷當運動狀態為休眠-->清掉上一隻,birdnum++;
             std::cout << "Release !" << std::endl ;
             //std::cout << mousepos.x() << std::endl ;
+        }
+        if(birdnum==3 && shotmode==1)
+        {
+            connect(&endtimer,SIGNAL(timeout()),this,SLOT(judgeresult()));
+            endtimer.start(5000);
         }
         return true;
     }
@@ -345,7 +404,7 @@ void MainWindow::judgeobsv()
         }
     }
 }
-
+/*
 void MainWindow::judgeresult()
 {
     if(birdnum==3 && shotmode==1)
@@ -395,4 +454,53 @@ void MainWindow::judgeresult()
 
     }
 }
+
+*/
+void MainWindow::judgeresult()
+{
+    ifend=1;
+
+    ui->label->hide();
+    ui->label_2->hide();
+    end = new QGraphicsPixmapItem;
+    QPixmap end_img;
+    end_img.load(":/image/end3.jpg");
+    end_img = end_img.scaled(960,540,Qt::KeepAspectRatio);
+    end->setPixmap(end_img);
+    end->setPos(0,0);
+    scene->addItem(end);
+
+
+    restart1 = new QGraphicsPixmapItem;
+    QPixmap restart_img;
+    restart_img.load(":/image/restart.png");
+    restart_img = restart_img.scaled(80,80,Qt::KeepAspectRatio);
+    restart1->setPixmap(restart_img);
+    restart1->setPos(785,10);
+    scene->addItem(restart1);
+
+    exit1 = new QGraphicsPixmapItem;
+    QPixmap exit_img;
+    exit_img.load(":/image/exit.png");
+    exit_img = exit_img.scaled(150,150,Qt::KeepAspectRatio);
+    exit1->setPixmap(exit_img);
+    exit1->setPos(750,110);
+    scene->addItem(exit1);
+
+    ui->label->hide();
+    ui->label_2->hide();
+
+
+    //ui->label_3->show();
+    ui->label_4->show();
+
+
+    QString scoreNum;
+    scoreNum =QString::number(firstScore);
+    ui->label_5->setText(scoreNum);
+    ui->label_5->show();
+
+
+}
+
 
